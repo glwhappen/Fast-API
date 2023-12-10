@@ -3,7 +3,7 @@ name: Build and Push Docker Image to Docker Hub
 on:
   push:
     branches:
-      - typecho  # 或您希望触发此工作流的分支
+      - main  # 或您希望触发此工作流的分支
 
 jobs:
   build-and-push:
