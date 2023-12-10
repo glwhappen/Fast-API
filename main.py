@@ -1,29 +1,17 @@
-import time
-from fastapi import BackgroundTasks, FastAPI
+from fastapi import FastAPI
+from user import user_router
+from items import items_router
+from other import other_router
 
 app = FastAPI()
+
+
+# 将用户和项目的路由添加到主应用
+app.include_router(user_router)
+app.include_router(items_router)
+app.include_router(other_router)
+
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
-
-
-# 查询参数 q 的类型为 str，默认值为 None，因此它是可选的。
-@app.get("/items/")
-async def read_items(q: str | None = None):
-    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
-    if q:
-        results.update({"q": q})
-    return results
-
-def write_notification(email: str, message=""):
-    with open("log.txt", mode="w") as email_file:
-        time.sleep(10)
-        content = f"notification for {email}: {message}"
-        email_file.write(content)
-
-
-@app.get("/send-notification/{email}")
-async def send_notification(email: str, background_tasks: BackgroundTasks):
-    background_tasks.add_task(write_notification, email, message="some notification")
-    return {"message": "Notification sent in the background"}
